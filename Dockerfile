@@ -1,22 +1,17 @@
-# Python Web App Dockerfile
+# Use Python Base Image
+FROM python:3.10-slim
 
-# Step 1: Use the official Python image from Docker Hub
-FROM python:3.9-slim
+# Set Working Directory
+WORKDIR /app
 
-# Step 2: Set the working directory
-WORKDIR /app 
+# Copy Application Code
+COPY . .
 
-# Step 3: Copy the application code
-COPY . /app /app/
+# Install Dependencies
+RUN pip install -r requirements.txt
 
-# Step 4: Copy requirements.txt file (if not already in the copy step)
-COPY requirements.txt /app/
-
-# Step 5: Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Step 6: Expose the port for the web app
+# Expose Port
 EXPOSE 5000
 
-# Step 7: Run the application
-CMD ["python", "app.py"]
+# Run the Application
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]

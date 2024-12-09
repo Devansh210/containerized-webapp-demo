@@ -1,16 +1,18 @@
-version: '3'
+version: '3.8'
 
 services:
- python-webapp:
-   build: .
-   ports:
-     - "5000:5000"
- 
- nginx-reverse-proxy:
-  build:
-    context: .
-    dockerfile: nginx.Dockerfile
-  ports:
-   - "80:80"
-  depends_on:
-   - python-webapp   
+  app:
+    build: .
+    container_name: python-web-container
+    ports:
+      - "5000:5000"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-container
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
